@@ -1,0 +1,132 @@
+Team Violet Software Plan
+Summary
+Team Violet is a private family care coordination app for newborn parents. Parents can create a family circle, request help, approve visits, track care on a calendar, and preserve completed moments with notes and photos. Helpers can claim tasks, confirm visits, receive reminders, and contribute memories when allowed.
+Use a responsive web app first, optimized for mobile and desktop.
+Core Roles
+`Parent`: owns the family circle, creates requests, approves visits.
+`Helper`: invited family member or friend who can claim tasks, request visits, complete work, and add notes/photos.
+`Guest`: preview-only user who can explore the product without seeing private family data.
+Core Care Item Model
+Use one shared model for tasks, visits, outings, and completed activities.
+Care item types:
+Meal
+Groceries
+Laundry
+Cleaning
+Child care
+Visit
+Outing
+Custom
+Care item statuses:
+Draft
+Requested
+Claimed
+Confirmed
+Completed
+Declined
+Canceled
+Expired
+Each care item should include:
+Title
+Category/type
+Description
+Date/time or flexible window
+Location, if relevant
+Requested by
+Claimed by
+Confirmed by
+Completed by
+Visibility/privacy setting
+Linked memory, if completed
+Main Features
+Home
+Keep the warm violet brand direction and family illustration style.
+For signed-out users, show the home page and the calendar page.
+For signed-in users, show all pages: Home, Calendar, Tasks and Memories - with today’s help, open requests, approvals, upcoming visits, completed tasks, and recent memories.
+Family Circle
+Parents create a private circle for their newborn support network.
+Parents invite helpers by email.
+Helpers create a simple profile with name, relationship, and notification preferences.
+Parents can remove members, change permissions, and revoke invite links.
+Tasks / Help Requests
+Parents create help requests with category, title, description, schedule, urgency, and instructions.
+Helpers can browse, filter, and claim open requests.
+Claimed tasks show the helper and current status.
+Parents can approve, edit, cancel, or mark tasks completed.
+Helpers can mark tasks completed and optionally add a note or photo.
+Include states for empty lists, no matching filters, overdue tasks, canceled tasks, declined requests, and completed requests.
+Calendar
+Show all scheduled care items in one calendar.
+Include requested, claimed, confirmed, completed, declined, and canceled items.
+Use consistent status colors between Calendar and Tasks.
+Month view should be the default desktop view.
+Add agenda/list view for mobile.
+Selecting an item opens a detail panel with status, requester, helper, time, location, notes, and available actions.
+Parents can approve or decline visits from Calendar.
+Helpers can claim open tasks from Calendar where allowed.
+Memories
+Memories can be created manually or generated from completed care items.
+Each memory includes title, date, linked care item, participants, notes, photos, and visibility.
+Parents and helpers can moderate memory content by hiding photos, deleting notes, editing titles.
+Notifications
+Notify helpers when new open requests are posted.
+Notify parents when a helper claims, declines, completes, or comments on a request.
+Notify helpers about upcoming claimed tasks and confirmed visits.
+Support email first.
+Include quiet hours and notification preferences.
+Design Improvements
+Keep:
+Violet brand palette
+Soft family illustrations
+Gentle card-based layout
+Main navigation: Home, Calendar, Tasks, Memories
+Task summary sidebar on desktop
+Improve:
+Standardize status colors across every screen.
+Increase contrast for pale purple text, inactive tabs, badges, and secondary copy.
+Add visible focus states and keyboard-friendly controls.
+Add mobile-first layouts: bottom navigation, agenda calendar, full-width task cards, and simplified detail panels.
+Use one consistent icon system.
+Add accessible labels for icon-only controls.
+Suggested Technical Architecture
+Frontend:
+Responsive React or Next.js app.
+Component system for navigation, cards, status badges, task rows, calendar items, modals, forms, photo gallery, and activity timeline.
+Shared design tokens for color, spacing, typography, borders, shadows, and status states.
+Backend:
+Email-based authentication.
+Invite-based family circle membership.
+Database tables for users, family circles, memberships, care items, claims, memories, photos, notes, notifications, and audit events.
+Object storage for family photos.
+Background jobs for reminders, digest emails, overdue task handling, and invite expiration.
+Privacy and Security:
+Family content is private by default.
+Guests cannot access real family data.
+Photo URLs should not be permanently public.
+Keep an audit trail for claim, confirm, complete, cancel, edit, and delete actions.
+Test Plan
+Product flow tests:
+Parent creates a family circle.
+Parent invites a helper.
+Helper accepts invitation.
+Parent creates a fixed-time help request.
+Parent creates a flexible help request.
+Helper claims an open request.
+Parent confirms or declines a visit.
+Helper marks a task completed.
+Completed task appears in Memories.
+Helper adds a note/photo.
+Calendar reflects each status correctly.
+Design and accessibility tests:
+Desktop and mobile screenshots for Home, Tasks, Calendar, Memories, and detail views.
+Keyboard navigation through nav, filters, task actions, modals, and forms.
+Contrast checks for text, badges, buttons, and status colors.
+Long names, long task titles, many photos, empty states, and dense calendar months.
+Screen reader labels for icons, buttons, tabs, inputs, and photo upload controls.
+Acceptance Criteria
+A parent can request help in under one minute.
+A helper can claim a task in two actions from the task list.
+Calendar and task list always show the same status for the same care item.
+Completed care items can become memories without re-entering details.
+Private family content is inaccessible to non-members.
+Mobile users can complete the main parent and helper flows without horizontal scrolling.
