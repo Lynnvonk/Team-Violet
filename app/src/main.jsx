@@ -815,7 +815,17 @@ function App() {
             setVisibleMonth={setVisibleMonth}
           />
         )}
-        {page === "tasks" && <TasksPage items={items} counts={counts} updateStatus={updateStatus} addItem={addItem} saveItem={saveItem} currentUserName={currentUserName} />}
+        {page === "tasks" && (
+          <TasksPage
+            items={items}
+            counts={counts}
+            updateStatus={updateStatus}
+            addItem={addItem}
+            saveItem={saveItem}
+            deleteItem={deleteItem}
+            currentUserName={currentUserName}
+          />
+        )}
         {page === "memories" && (
           <MemoriesPage
             completedItems={items.filter((item) => item.status === "Completed")}
@@ -931,7 +941,7 @@ function HomePage({ onSignIn, onCreateAccount }) {
       <div className="feature-row">
         <div className="feature-card visit-card">
           <CalendarDays />
-          <h2>Plan gentle visits</h2>
+          <h2>Plan visits</h2>
         </div>
         <div className="feature-card sage help-card">
           <Heart />
@@ -1368,7 +1378,7 @@ function getShortDay(value) {
   return parsed.toLocaleDateString("en-US", { weekday: "short" });
 }
 
-function TasksPage({ items, counts, updateStatus, addItem, saveItem, currentUserName }) {
+function TasksPage({ items, counts, updateStatus, addItem, saveItem, deleteItem, currentUserName }) {
   const [filter, setFilter] = useState("Requested");
   const [isCreating, setIsCreating] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -1406,6 +1416,10 @@ function TasksPage({ items, counts, updateStatus, addItem, saveItem, currentUser
                       saveItem(id, updates);
                       setEditingTaskId(null);
                       setFilter(updates.status || item.status);
+                    }}
+                    onDelete={(id) => {
+                      deleteItem(id);
+                      setEditingTaskId(null);
                     }}
                   />
                 )}
@@ -1472,7 +1486,7 @@ function NewRequestForm({ onCancel, onCreate, currentUserName }) {
   );
 }
 
-function TaskEditForm({ item, onCancel, onSave, currentUserName }) {
+function TaskEditForm({ item, onCancel, onSave, onDelete, currentUserName }) {
   const [form, setForm] = useState({
     title: item.title,
     description: item.description,
@@ -1530,6 +1544,7 @@ function TaskEditForm({ item, onCancel, onSave, currentUserName }) {
         </div>
         <div className="panel-actions">
           <button className="primary" type="submit">Save Changes</button>
+          <button className="delete-option" type="button" onClick={() => onDelete(item.id)}>Delete Request</button>
           <button className="secondary" type="button" onClick={onCancel}>Cancel</button>
         </div>
       </form>
@@ -1804,7 +1819,7 @@ function MemoriesPage({ completedItems, dbContext, currentUserName, saveItem }) 
     <section className="page-shell memories-page">
       <div className="memories-topline">
         <label className="completed-task-picker">
-          Select Completed Task
+          <span><strong>SELECT</strong> Completed Task</span>
           <select
             value={selectedCompleted?.id ?? ""}
             onChange={(event) => setSelectedCompletedId(event.target.value)}
@@ -1832,6 +1847,7 @@ function MemoriesPage({ completedItems, dbContext, currentUserName, saveItem }) 
               <p>
                 <CalendarDays size={18} /> {selectedCompleted?.fullDate ?? "Complete a task to start a memory"}
                 {selectedCompleted?.time && <><Clock size={18} /> {selectedCompleted.time}</>}
+                {selectedCompleted?.location && <><MapPin size={18} /> {selectedCompleted.location}</>}
               </p>
             </div>
             <div className="park-scene" aria-hidden="true">
@@ -1908,9 +1924,6 @@ function MemoriesPage({ completedItems, dbContext, currentUserName, saveItem }) 
             ) : (
               <>
                 <dl>
-                  <dt>Activity Type</dt><dd>{selectedCompleted?.type ?? "Not selected"}</dd>
-                  <dt>Location</dt><dd>{selectedCompleted?.location ?? "Not selected"}</dd>
-                  <dt>Requested By</dt><dd>{selectedCompleted?.requestedBy || currentUserName}</dd>
                   <dt>Helper</dt><dd>{selectedCompleted?.completedBy || selectedCompleted?.claimedBy || currentUserName}</dd>
                 </dl>
                 <button className="secondary wide" type="button" onClick={() => setIsEditingActivity(true)} disabled={!selectedCompleted}>
